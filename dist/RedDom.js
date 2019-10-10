@@ -126,7 +126,7 @@ Copyright (c) 2019 ~ By RedCamel.
 
 var UUID_TABLE, UUID;
 var RedDom, RedDomCls, fn;
-UUID = 0
+UUID = 0;
 UUID_TABLE = {},
 	//////////////////////////////////
 	// 실제 클래스
@@ -145,14 +145,14 @@ UUID_TABLE = {},
 			else if (k = k.trim(), k.charAt(0) == "<") {
 				t = document.createElement("div"),
 					t.innerHTML = k,
-					result = new RedDomCls(t.childNodes[0])
+					result = new RedDomCls(t.childNodes[0]);
 				t = null;
 			} else if (k.charAt(0) == "#") {
 				t = document.getElementById(k = k.substr(1, k.length - 1));
-				if (t && UUID_TABLE[t.__uuid]) result = UUID_TABLE[t.__uuid]
-				else if (t) result = new RedDomCls(t)
+				if (t && UUID_TABLE[t.__uuid]) result = UUID_TABLE[t.__uuid];
+				else if (t) result = new RedDomCls(t);
 				else result = null
-			} else result = new RedDomCls(document.createElement(k))
+			} else result = new RedDomCls(document.createElement(k));
 			return result;
 		}
 	})(),
@@ -165,7 +165,7 @@ UUID_TABLE = {},
 	//////////////////////////////////
 	// fn정의
 	fn.S = (function () {
-		var noPx = {'opacity': 1, 'z-index': 1, 'zIndex': 1}
+		var noPx = {'opacity': 1, 'z-index': 1, 'zIndex': 1};
 		return function () {
 			var arg = arguments;
 			var max, i;
@@ -233,66 +233,31 @@ UUID_TABLE = {},
 	fn['text+'] = function (v) {
 		return v != undefined ? this.dom.textContent += v : this.dom.textContent
 	},
-	fn['@value'] = fn['value'] = function (v) {
+	fn['@value'] = function (v) {
 		return v != undefined ? this.dom.value = v : this.dom.value
-	},
-	// 이거 개선의 여지가 있군.. body도 우리돔으로 바꿔야하나..
-	fn['>'] = function (v) {
-		v == 'body' ? v = document.body : 0,
-			this.dom.appendChild(v.dom)
 	},
 	fn['<'] = function (v) {
 		v == 'body' ? v = document.body : v = v.dom,
 			v.appendChild(this.dom)
 	},
-	fn['-'] = fn['remove'] = (function () { // children 기반 연산, ss에서 사용 가능
-		var len, t
-		return function (arg) {
-			if (arg == undefined || arg == 'self') this.dom.parentNode.removeChild(this.dom)
-			else if (arg == 'all') this.dom.innerHTML = '';
-			else if (arg instanceof Array) { // arg:[aDom,aDom,dom,dom ...] TODO : ss에서 배열을 받을지 말지 결정..?
-				len = arg.length
-				while (len--) t = arg[len], this.dom.removeChild(t.dom ? t.dom : t);
-			} else if (!isNaN(arg)) { // arg:Number
-				arg = parseInt(arg);
-				if ((len = this.dom.children.length) == 0) console.log('There is no child element to be removed, ', this);
-				else this.dom.removeChild(this.dom.children[len <= arg ? len - 1 : 0 <= arg ? arg : len + arg]);
-			} else if (typeof arg == 'string') { // arg:query
-				t = this.dom.querySelectorAll(arg), len = t.length;
-				while (len--) this.dom.removeChild(t[len]);
-			} else this.dom.removeChild(arg.dom ? arg.dom : arg); // arg: aDom or Element
-			return this
-		}
-	})(),
-	fn['+'] = fn['add'] = (function () { // children 기반 연산, dom에서 직접 사용
-		var len, t;
-		return function (o, v) {
-			if (arguments.length == 1) {
-				if (o instanceof Array) { // arg:[aDom,aDom,dom,dom ...] TODO : 배열을 받을지 말지 결정..?
-					len = arg.length
-					while (len--) t = arg[len], this.dom.removeChild(t.dom ? t.dom : t)
-				} else this.dom.appendChild(o.dom ? o.dom : o)
-				return this;
-			}
-			v = v.dom ? v.dom : v
-			if (!isNaN(o)) { // o:Number
-				len = this.dom.children.length;
-				t = 0 <= o ? o : len < -o ? 0 : len + parseInt(o) + 1; // -1 이면 맨 마지막, -999 이면 0번째 앞에 넣는다
-				if (t = this.dom.children[t]) this.dom.insertBefore(v, t)
-				else 0 <= o ? console.log('There is no nth-child(' + o + ') in this element, ', this) : 0, this.dom.appendChild(v)
-			} else if (typeof o == 'string') { // o:query
-				if (t = this.dom.querySelector(o)) this.dom.insertBefore(v, t);
-				else console.log('There is no nth-child(' + o + ') in this element, ', this), this.dom.appendChild(v)
-			} else this.dom.insertBefore(v, o.dom ? o.dom : o) // o:Element 일떄, v를 o앞에 넣는다.
-			return this
-		}
-	})(),
+	fn['remove'] =function () {
+		if (this.dom.parentNode) this.dom.parentNode.removeChild(this.dom);
+		return this
+	},
+	fn['addChild'] = fn['>'] = function (v) {
+		if(v instanceof RedDom) v = v.dom;
+		this.dom.appendChild(v)
+		return this
+	},
+	//TODO fn['addChildAt'] = function(){}
+	//TODO fn['removeChild'] = function(){}
+	//TODO fn['removeChildAt'] = function(){}
 	fn['getChildAt'] = function (v) {
 		var t;
 		v = parseInt(v), v = 0 <= v ? v : this.dom.children.length + v;
-		return (t = this.dom.children[v]) ? Alucard.Dom(t) : null
+		return (t = this.dom.children[v]) ? RedDom(t) : null
 	},
-	fn['getChildLength'] = function () {
+	fn['getChildNum'] = function () {
 		return this.dom.children.length
 	},
 	fn['getChildIndex'] = function (v) {
@@ -301,8 +266,6 @@ UUID_TABLE = {},
 	fn['getSelfIndex'] = function () {
 		return Array.prototype.indexOf.call(this.dom.parentNode.children, this.dom)
 	};
-
-
 /* harmony default export */ __webpack_exports__["default"] = (RedDom);
 
 /***/ })
