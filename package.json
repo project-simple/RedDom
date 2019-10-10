@@ -1,0 +1,38 @@
+{
+  "name": "project-simple-red-dom",
+  "version": "1.0.0",
+  "description": "Simple Dom Manager",
+  "main": "dist/RedDom.min.js",
+  "dependencies": {
+    "project-simple-red-detector": "^1.0.10"
+  },
+  "devDependencies": {
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
+  },
+  "scripts": {
+    "npmVersionPatch": "npm --no-git-tag-version version patch",
+    "npmPublish": "npm adduser && npm publish",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/project-simple/RedDom.git"
+  },
+  "keywords": [
+    "dom",
+    "red-dom",
+    "project-simple"
+  ],
+  "author": {
+    "name": "redcamel",
+    "email": "webseon@gmail.com",
+    "url": "https://github.com/redcamel"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/project-simple/RedDom/issues"
+  },
+  "homepage": "https://github.com/project-simple/RedDom#readme"
+}
