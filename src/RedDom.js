@@ -115,25 +115,29 @@ UUID_TABLE = {},
 	fn['text+'] = function (v) {
 		return v != undefined ? this.dom.textContent += v : this.dom.textContent
 	},
-	fn['@value'] = function (v) {
+	fn['value'] = function (v) {
 		return v != undefined ? this.dom.value = v : this.dom.value
 	},
 	fn['<'] = function (v) {
-		v == 'body' ? v = document.body : v = v.dom,
-			v.appendChild(this.dom)
+		v = v == 'body' ? document.body : v instanceof RedDomCls ? v.dom : v;
+		v.appendChild(this.dom)
 	},
-	fn['remove'] =function () {
+	fn['remove'] = function () {
 		if (this.dom.parentNode) this.dom.parentNode.removeChild(this.dom);
 		return this
 	},
 	fn['addChild'] = fn['>'] = function (v) {
-		if(v instanceof RedDom) v = v.dom;
-		this.dom.appendChild(v)
-		return this
+		this.dom.appendChild(v instanceof RedDomCls ? v.dom : v);
 	},
+	fn['removeChild'] = function(v){
+		this.dom.removeChild(v instanceof RedDomCls ? v.dom : v);
+	},
+	fn['removeChildAt'] = function(index){
+		if(this.dom.children[index]){
+			this.dom.removeChild(this.dom.children[index])
+		}
+	}
 	//TODO fn['addChildAt'] = function(){}
-	//TODO fn['removeChild'] = function(){}
-	//TODO fn['removeChildAt'] = function(){}
 	fn['getChildAt'] = function (v) {
 		var t;
 		v = parseInt(v), v = 0 <= v ? v : this.dom.children.length + v;
