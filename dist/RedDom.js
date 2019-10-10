@@ -140,7 +140,7 @@ UUID_TABLE = {},
 	RedDom = (function () {
 		var result, t;
 		return function (k) {
-			if(k=='body') k = document.body;
+			if (k == 'body') k = document.body;
 			if (k instanceof Element) result = UUID_TABLE[k.__uuid] ? UUID_TABLE[k.__uuid] : new RedDomCls(k);
 			else if (k = k.trim(), k.charAt(0) == "<") {
 				t = document.createElement("div"),
