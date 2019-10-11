@@ -31,59 +31,57 @@ RedDom('div').S(
 ## RedDom( target string or element )
 - #### 4 ways to create a RedDom Instance
 - by id
-```html
-<div id="test-id"></div>
-```
-```javascript
-RedDom('#test-id'); // return RedDomCls instance
-```
+    ```html
+    <div id="test-id"></div>
+    ```
+    ```javascript
+    RedDom('#test-id'); // return RedDomCls instance
+    ```
 - by tag name
-```javascript
-RedDom('div'); // create div element and return RedDomCls instance
-```
+    ```javascript
+    RedDom('div'); // create div element and return RedDomCls instance
+    ```
 - by html string
-```javascript
-RedDom('<div style="color:red">test<div>'); // create html element and return RedDomCls instance
-```
+    ```javascript
+    RedDom('<div style="color:red">test<div>'); // create html element and return RedDomCls instance
+    ```
 - by element
-```javascript
-RedDom(document.createElement('div')); // return RedDomCls instance
-RedDom(document.querySelector('#test-id')); // return RedDomCls instance
-```
+    ```javascript
+    RedDom(document.createElement('div')); // return RedDomCls instance
+    RedDom(document.querySelector('#test-id')); // return RedDomCls instance
+    ```
 ## Set Dom Attribute 
 - RedDom('input').S('@attributeName','targetValue'); 
-- 
-```javascript
-RedDom('input').S( '@value','this is value' );
-```
+    ```javascript
+    RedDom('input').S( '@value','this is value' );
+    ```
 equal
-```html
-<input value="this is value"></input>
-```
+    ```html
+    <input value="this is value"></input>
+    ```
 ## Get Dom Attribute 
 - RedDom('input').S('@attributeName'); 
-- 
-```javascript
-var t0 = RedDom('input').S( '@value','this is value' );
-console.log(t0.S('@value')) // this is value
-```
+
+    ```javascript
+    var t0 = RedDom('input').S( '@value','this is value' );
+    console.log(t0.S('@value')) // this is value
+    ```
 
 ## Set Dom style 
 - RedDom('div').S('style name','targetValue'); 
-```javascript
-RedDom('div').S( 'background','red' );
-```
+    ```javascript
+    RedDom('div').S( 'background','red' );
+    ```
 equal
-```html
-<div style="background:red"></div>
-```
+    ```html
+    <div style="background:red"></div>
+    ```
 ## Get Dom style 
 - RedDom('input').S('style name'); 
-- 
-```javascript
-var t0 = RedDom('div').S( 'background','red' );
-console.log(t0.S('background')) // red
-```
+    ```javascript
+    var t0 = RedDom('div').S( 'background','red' );
+    console.log(t0.S('background')) // red
+    ```
 
 ## TestCase
 - MochaTest : [here](https://project-simple.github.io/RedDom/testRun_browser.html)
