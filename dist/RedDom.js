@@ -247,6 +247,11 @@ UUID_TABLE = {},
 	fn['addChild'] = fn['>'] = function (v) {
 		this.dom.appendChild(v instanceof RedDomCls ? v.dom : v);
 	},
+	fn['addChildAt'] = function(index,v){
+		var refChild = this.dom.children[index];
+		if(refChild) this.dom.insertBefore(v instanceof RedDomCls ? v.dom : v, refChild);
+		else this.dom.appendChild(v instanceof RedDomCls ? v.dom : v);
+	},
 	fn['removeChild'] = function(v){
 		this.dom.removeChild(v instanceof RedDomCls ? v.dom : v);
 	},
@@ -254,12 +259,10 @@ UUID_TABLE = {},
 		if(this.dom.children[index]){
 			this.dom.removeChild(this.dom.children[index])
 		}
-	}
-	//TODO fn['addChildAt'] = function(){}
-	fn['getChildAt'] = function (v) {
+	},
+	fn['getChildAt'] = function (index) {
 		var t;
-		v = parseInt(v), v = 0 <= v ? v : this.dom.children.length + v;
-		return (t = this.dom.children[v]) ? RedDom(t) : null
+		return (t = this.dom.children[index]) ? RedDom(t) : null
 	},
 	fn['getChildNum'] = function () {
 		return this.dom.children.length

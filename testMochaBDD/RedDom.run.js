@@ -168,131 +168,223 @@ describe('Test "S" method', function () {
 			})
 		})
 		describe('Test container key', function () {
-			it("> : 왼쪽을 부모로 자식을 등록 : RedDom Instance", function () {
-				var tParent = RedDom('div');
-				var tChild = RedDom('div');
-				tParent.S('>', tChild)
-				expect(tParent.dom.children[0]).to.be.equal(tChild.dom);
+			describe("> : 왼쪽을 부모로 자식을 등록", function () {
+				it("> : 왼쪽을 부모로 자식을 등록 : RedDom Instance", function () {
+					var tParent = RedDom('div');
+					var tChild = RedDom('div');
+					tParent.S('>', tChild)
+					expect(tParent.dom.children[0]).to.be.equal(tChild.dom);
+				})
+				it("> : 왼쪽을 부모로 자식을 등록 : Dom Element", function () {
+					var tParent = RedDom('body');
+					var tChild = document.createElement('div');
+					tParent.S('>', tChild)
+					expect(document.body.children[document.body.children.length - 1]).to.be.equal(tChild);
+				})
 			})
-			it("> : 왼쪽을 부모로 자식을 등록 : Dom Element", function () {
-				var tParent = RedDom('body');
-				var tChild = document.createElement('div');
-				tParent.S('>', tChild)
-				expect(document.body.children[document.body.children.length-1]).to.be.equal(tChild);
+			describe("> : 오른쪽을 부모로 자식을 등록", function () {
+				it("< : 오른쪽을 부모로 자식을 등록 - RedDom Instance", function () {
+					var tParent = RedDom('div');
+					var tChild = RedDom('div');
+					tChild.S('<', tParent)
+					expect(tParent.dom.children[0]).to.be.equal(tChild.dom);
+				})
+				it("< : 오른쪽을 부모로 자식을 등록 - body", function () {
+					var tParent = 'body';
+					var tChild = RedDom('div');
+					tChild.S('<', tParent)
+					expect(document.body.children[document.body.children.length - 1]).to.be.equal(tChild.dom);
+				})
+				it("< : 오른쪽을 부모로 자식을 등록 - Dom Element", function () {
+					var tParent = document.createElement('div');
+					var tChild = RedDom('div');
+					tChild.S('<', tParent)
+					expect(tParent.children[0]).to.be.equal(tChild.dom);
+				})
 			})
-			it("< : 오른쪽을 부모로 자식을 등록 - RedDom Instance", function () {
-				var tParent = RedDom('div');
-				var tChild = RedDom('div');
-				tChild.S('<', tParent)
-				expect(tParent.dom.children[0]).to.be.equal(tChild.dom);
-			})
-			it("< : 오른쪽을 부모로 자식을 등록 - body", function () {
-				var tParent = 'body';
-				var tChild = RedDom('div');
-				tChild.S('<', tParent)
-				expect(document.body.children[document.body.children.length-1]).to.be.equal(tChild.dom);
-			})
-			it("< : 오른쪽을 부모로 자식을 등록 - Dom Element", function () {
-				var tParent = document.createElement('div');
-				var tChild = RedDom('div');
-				tChild.S('<', tParent)
-				expect(tParent.children[0]).to.be.equal(tChild.dom);
-			})
-			it("remove : 자신을 부모에게서 제거", function () {
-				var tParent = RedDom('div');
-				var tChild = RedDom('div');
-				tParent.S('>', tChild)
-				tChild.remove()
-				expect(tParent.dom.children[0]).to.be.undefined;
-			})
-			it("remove : 부모가 없을떄 에러안나는지 확인", function () {
-				var result = true
-				var tChild = RedDom('div');
-				try {
+			describe("remove", function () {
+				it("remove : 자신을 부모에게서 제거", function () {
+					var tParent = RedDom('div');
+					var tChild = RedDom('div');
+					tParent.S('>', tChild)
 					tChild.remove()
-				}catch (e) {
-					result = false
-				}
-				expect(result).to.be.true;
+					expect(tParent.dom.children[0]).to.be.undefined;
+				})
+				it("remove : 부모가 없을떄 에러안나는지 확인", function () {
+					var result = true
+					var tChild = RedDom('div');
+					try {
+						tChild.remove()
+					} catch (e) {
+						result = false
+					}
+					expect(result).to.be.true;
+				})
 			})
-			it("addChild : 자식을 등록 : RedDom Instance", function () {
-				var tParent = RedDom('div');
-				var tChild = RedDom('div');
-				tParent.S('addChild', tChild)
-				expect(tParent.dom.children[0]).to.be.equal(tChild.dom);
+			describe("addChild", function () {
+				it("addChild : 자식을 등록 : RedDom Instance", function () {
+					var tParent = RedDom('div');
+					var tChild = RedDom('div');
+					tParent.S('addChild', tChild)
+					expect(tParent.dom.children[0]).to.be.equal(tChild.dom);
+				})
+				it("addChild : 자식을 등록 : Dom Element", function () {
+					var tParent = RedDom('body');
+					var tChild = document.createElement('div');
+					tParent.S('addChild', tChild)
+					expect(document.body.children[document.body.children.length - 1]).to.be.equal(tChild);
+				})
 			})
-			it("addChild : 자식을 등록 : Dom Element", function () {
-				var tParent = RedDom('body');
-				var tChild = document.createElement('div');
-				tParent.S('addChild', tChild)
-				expect(document.body.children[document.body.children.length-1]).to.be.equal(tChild);
+			describe("removeChild", function () {
+				it("removeChild : 자식중에 타겟을 제거 : RedDom Instance", function () {
+					var tParent = RedDom('div');
+					var tChild = RedDom('div');
+					var tChild2 = RedDom('button')
+					var tChild3 = RedDom('input')
+					tParent.S(
+						'>', tChild,
+						'>', tChild2,
+						'>', tChild3
+					)
+					tParent.S('removeChild', tChild)
+					expect(tParent.dom.children[0]).to.be.equal(tChild2.dom);
+				})
+				it("removeChild : 자식중에 타겟을 제거 : Dom Element", function () {
+					var tParent = RedDom('div');
+					var tChild = document.createElement('div');
+					var tChild2 = RedDom('button')
+					var tChild3 = RedDom('input')
+					tParent.S(
+						'>', tChild,
+						'>', tChild2,
+						'>', tChild3
+					)
+					tParent.S('removeChild', tChild)
+					expect(tParent.dom.children[1]).to.be.equal(tChild3.dom);
+				})
 			})
-			it("removeChild : 자식중에 타겟을 제거 : RedDom Instance", function () {
-				var tParent = RedDom('div');
-				var tChild = RedDom('div');
-				var tChild2 = RedDom('button')
-				var tChild3 = RedDom('input')
-				tParent.S(
-					'>', tChild,
-					'>', tChild2,
-					'>', tChild3
-				)
-				tParent.S('removeChild', tChild)
-				expect(tParent.dom.children[0]).to.be.equal(tChild2.dom);
+			describe("removeChildAt", function () {
+				it("removeChildAt : 자식을 인덱스로 제거", function () {
+					var tParent = RedDom('div');
+					var tChild = RedDom('div');
+					var tChild2 = RedDom('button')
+					var tChild3 = RedDom('input')
+					tParent.S(
+						'>', tChild,
+						'>', tChild2,
+						'>', tChild3
+					)
+					tParent.S('removeChildAt', 0)
+					expect(tParent.dom.children[0]).to.be.equal(tChild2.dom);
+				})
+				it("removeChildAt : 자식을 인덱스로 제거", function () {
+					var tParent = RedDom('div');
+					var tChild = RedDom('div');
+					var tChild2 = RedDom('button')
+					var tChild3 = RedDom('input')
+					tParent.S(
+						'>', tChild,
+						'>', tChild2,
+						'>', tChild3
+					)
+					tParent.S('removeChildAt', 1)
+					expect(tParent.dom.children[1]).to.be.equal(tChild3.dom);
+				})
+				it("removeChildAt : 해당 인덱스에 자식이 없을떄 에러안나는지 확인", function () {
+					var result = true
+					var tChild = RedDom('div');
+					try {
+						tChild.removeChildAt(0)
+					} catch (e) {
+						result = false
+					}
+					expect(result).to.be.true;
+				})
 			})
-			it("removeChild : 자식중에 타겟을 제거 : Dom Element", function () {
-				var tParent = RedDom('div');
-				var tChild = document.createElement('div');
-				var tChild2 = RedDom('button')
-				var tChild3 = RedDom('input')
-				tParent.S(
-					'>', tChild,
-					'>', tChild2,
-					'>', tChild3
-				)
-				tParent.S('removeChild', tChild)
-				expect(tParent.dom.children[1]).to.be.equal(tChild3.dom);
+			describe("getChildXXX", function () {
+				it('getChildAt', function () {
+					var tParent = RedDom('div');
+					var tChild1 = RedDom('button');
+					var tChild2 = RedDom('input');
+					var tChild3 = RedDom('ul');
+					tParent.S('>', tChild1);
+					tParent.S('>', tChild2);
+					tParent.S('>', tChild3);
+					
+					console.log(tParent)
+					console.log(tParent.getChildAt(0), tChild1)
+					expect(tParent.getChildAt(0)).to.be.equal(tChild1);
+				})
+				it('getChildAt - TODO', function () {
+					var tParent = RedDom('div');
+					var tChild1 = RedDom('button');
+					var tChild2 = RedDom('input');
+					var tChild3 = RedDom('ul');
+					tParent.S('>', tChild1);
+					tParent.S('>', tChild2);
+					tParent.S('>', tChild3);
+					
+					console.log(tParent)
+					console.log(tParent.getChildAt(1), tChild2)
+					expect(tParent.getChildAt(1)).to.be.equal(tChild2);
+				})
+				it('getChildNum', function () {
+					var tParent = RedDom('div');
+					var tChild1 = RedDom('button');
+					var tChild2 = RedDom('input');
+					var tChild3 = RedDom('ul');
+					tParent.S('>', tChild1);
+					tParent.S('>', tChild2);
+					tParent.S('>', tChild3);
+					
+					expect(tParent.getChildNum()).to.be.equal(3);
+				})
+				it('getChildIndex', function () {
+					var tParent = RedDom('div');
+					var tChild1 = RedDom('button');
+					var tChild2 = RedDom('input');
+					var tChild3 = RedDom('ul');
+					tParent.S('>', tChild1);
+					tParent.S('>', tChild2);
+					tParent.S('>', tChild3);
+					
+					expect(tParent.getChildIndex(tChild1)).to.be.equal(0);
+				})
+				it('getChildIndex', function () {
+					var tParent = RedDom('div');
+					var tChild1 = RedDom('button');
+					var tChild2 = RedDom('input');
+					var tChild3 = RedDom('ul');
+					tParent.S('>', tChild1);
+					tParent.S('>', tChild2);
+					tParent.S('>', tChild3);
+					
+					expect(tParent.getChildIndex(tChild2)).to.be.equal(1);
+				})
 			})
-			it("removeChildAt : 자식을 인덱스로 제거", function () {
-				var tParent = RedDom('div');
-				var tChild = RedDom('div');
-				var tChild2 = RedDom('button')
-				var tChild3 = RedDom('input')
-				tParent.S(
-					'>', tChild,
-					'>', tChild2,
-					'>', tChild3
-				)
-				tParent.S('removeChildAt', 0)
-				expect(tParent.dom.children[0]).to.be.equal(tChild2.dom);
+			describe("getSelfIndex", function () {
+				it('getSelfIndex', function(){
+					var tParent = RedDom('div');
+					var tChild1 = RedDom('button');
+					var tChild2 = RedDom('input');
+					var tChild3 = RedDom('ul');
+					tParent.S('>', tChild1);
+					tParent.S('>', tChild2);
+					tParent.S('>', tChild3);
+					expect(tChild1.getSelfIndex()).to.be.equal(0);
+				})
+				it('getSelfIndex', function(){
+					var tParent = RedDom('div');
+					var tChild1 = RedDom('button');
+					var tChild2 = RedDom('input');
+					var tChild3 = RedDom('ul');
+					tParent.S('>', tChild1);
+					tParent.S('>', tChild2);
+					tParent.S('>', tChild3);
+					expect(tChild2.getSelfIndex()).to.be.equal(1);
+				})
 			})
-			it("removeChildAt : 자식을 인덱스로 제거", function () {
-				var tParent = RedDom('div');
-				var tChild = RedDom('div');
-				var tChild2 = RedDom('button')
-				var tChild3 = RedDom('input')
-				tParent.S(
-					'>', tChild,
-					'>', tChild2,
-					'>', tChild3
-				)
-				tParent.S('removeChildAt', 1)
-				expect(tParent.dom.children[1]).to.be.equal(tChild3.dom);
-			})
-			it("removeChildAt : 해당 인덱스에 자식이 없을떄 에러안나는지 확인", function () {
-				var result = true
-				var tChild = RedDom('div');
-				try {
-					tChild.removeChildAt(0)
-				}catch (e) {
-					result = false
-				}
-				expect(result).to.be.true;
-			})
-			it('getChildAt - TODO')
-			it('getChildNum - TODO')
-			it('getChildIndex - TODO')
-			it('getSelfIndex - TODO')
+
 		})
 	})
 });
