@@ -310,7 +310,7 @@ describe('Test "S" method', function () {
 					tParent.S('>', tChild1);
 					tParent.S('>', tChild2);
 					tParent.S('>', tChild3);
-					
+
 					console.log(tParent)
 					console.log(tParent.getChildAt(0), tChild1)
 					expect(tParent.getChildAt(0)).to.be.equal(tChild1);
@@ -323,7 +323,7 @@ describe('Test "S" method', function () {
 					tParent.S('>', tChild1);
 					tParent.S('>', tChild2);
 					tParent.S('>', tChild3);
-					
+
 					console.log(tParent)
 					console.log(tParent.getChildAt(1), tChild2)
 					expect(tParent.getChildAt(1)).to.be.equal(tChild2);
@@ -336,7 +336,7 @@ describe('Test "S" method', function () {
 					tParent.S('>', tChild1);
 					tParent.S('>', tChild2);
 					tParent.S('>', tChild3);
-					
+
 					expect(tParent.getChildNum()).to.be.equal(3);
 				})
 				it('getChildIndex', function () {
@@ -347,7 +347,7 @@ describe('Test "S" method', function () {
 					tParent.S('>', tChild1);
 					tParent.S('>', tChild2);
 					tParent.S('>', tChild3);
-					
+
 					expect(tParent.getChildIndex(tChild1)).to.be.equal(0);
 				})
 				it('getChildIndex', function () {
@@ -358,12 +358,12 @@ describe('Test "S" method', function () {
 					tParent.S('>', tChild1);
 					tParent.S('>', tChild2);
 					tParent.S('>', tChild3);
-					
+
 					expect(tParent.getChildIndex(tChild2)).to.be.equal(1);
 				})
 			})
 			describe("getSelfIndex", function () {
-				it('getSelfIndex', function(){
+				it('getSelfIndex', function () {
 					var tParent = RedDom('div');
 					var tChild1 = RedDom('button');
 					var tChild2 = RedDom('input');
@@ -373,7 +373,7 @@ describe('Test "S" method', function () {
 					tParent.S('>', tChild3);
 					expect(tChild1.getSelfIndex()).to.be.equal(0);
 				})
-				it('getSelfIndex', function(){
+				it('getSelfIndex', function () {
 					var tParent = RedDom('div');
 					var tChild1 = RedDom('button');
 					var tChild2 = RedDom('input');
@@ -384,7 +384,42 @@ describe('Test "S" method', function () {
 					expect(tChild2.getSelfIndex()).to.be.equal(1);
 				})
 			})
+		})
+	})
+	describe('Test Events - get/set', function () {
+		var makeTests = function (key) {
+			it('test - ' + key + ' : set/get', function () {
+				var tHandler = function () {
+					console.log(key, 'handler')
+				}
+				var t0 = RedDom('div').S(key, tHandler);
+				expect(t0.S(key).originHandler).to.be.equal(tHandler);
+			})
+			it('test - ' + key + ' : remove', function () {
+				var tHandler = function () {
+					console.log(key, 'handler')
+				}
+				var t0 = RedDom('div').S(key, tHandler);
+				t0.S(key, null)
+				expect(t0.S(key)).to.be.undefined;
+			})
+		}
 
+		describe('Mouse, Touch', function () {
+			it('')
+			// safari not surpport 'wheel',
+			'over,out,down,up,move,click,dbclick'.split(',').forEach(makeTests) // 'wheel',
+		})
+		describe('Keyboard', function () {
+			['keydown', 'keyup', 'keypress'].forEach(makeTests)
+		})
+		describe('Element', function () {
+			// safari not surpport 'invalid',
+			// ie, firefox not surpport 'search',
+			['blur', 'change', 'contextmenu', 'focus', 'reset', 'select', 'submit'].forEach(makeTests) //  'invalid',  'search'
+		})
+		describe('Drag', function () {
+			['drag', 'dragend', 'dragenter', 'dragleave', 'dragover', 'dragstart', 'drop', 'scroll'].forEach(makeTests)
 		})
 	})
 });
