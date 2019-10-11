@@ -408,7 +408,7 @@ describe('Test "S" method', function () {
 		describe('Mouse, Touch', function () {
 			it('')
 			// safari not surpport 'wheel',
-			'over,out,down,up,move,click,dbclick'.split(',').forEach(makeTests) // 'wheel',
+			'over,out,down,up,move,click,dblclick'.split(',').forEach(makeTests) // 'wheel',
 		})
 		describe('Keyboard', function () {
 			['keydown', 'keyup', 'keypress'].forEach(makeTests)
