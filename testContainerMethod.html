@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>RedDom TestCase</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src="dist/RedDom.js"></script>
+    <script src="https://project-simple.github.io/RedCss/dist/RedCss.min.js"></script>
+    <style>
+        html, body {
+            background: black;
+        }
+    </style>
+</head>
+<body>
+<script>
+	var createItem, setTestBts
+	var testImg1 = 'https://pbs.twimg.com/profile_images/1587364641/new-tw004_400x400.jpg'
+	var testImg2 = 'http://data5.onnada.com/character/201601/thumb_991326802_442826a9_8380EAB8B029.jpg'
+	var itemW, itemH
+	var rootBox, counterBox
+	itemW = 30, itemH = 30
+	rootBox = RedDom('div').S(
+		'@className', 'rootBox',
+		'position', 'absolute',
+		'top', 0, 'left', 0,
+		'right', 350,
+		'height', '100%',
+		'<', 'body'
+	)
+	counterBox = RedDom('div').S(
+		'margin-right', 10, 'margin-top', 10,
+		'float', 'right',
+		'html', 'test',
+		'color', '#fff',
+		'<', 'body'
+	)
+	createItem = (function () {
+		var t1, t0;
+		return function () {
+			t1 = Math.random() > 0.5 ? 1 : 0
+			t0 = RedDom('button').S(
+				'position', 'relative',
+				'@className', 'testITEM type' + t1,
+				'text-align', 'center',
+				'background', 'url(' + (t1 ? testImg1 : testImg2) + ')', 'background-size', 'cover', 'background-position', 'center',
+				'width', itemW * 2, 'height', itemH * 2, 'border-radius', '50%',
+				'margin', '10px 10px 80px 10px'
+			)
+			t0.S(
+				'>', RedDom('div').S(
+					'width', itemW * 2, 'text-align', 'center',
+					'>', RedDom('div').S(
+						'position', 'absolute',
+						'color', '#fff',
+						'font-size', 10,
+						'bottom', -40,
+						'html', 'id : item_' + t0.dom.__uuid + '<br>class : type' + t1
+					)
+				),
+				'@id', 'item_' + t0.dom.__uuid
+			)
+			return t0
+		}
+	})()
+	setTestBts = function () {
+		RedCss('.testButton').S(
+			'display', 'block',
+			'background', 'red',
+			'border', 0, 'padding', 7, 'outline', 'none',
+			'margin-bottom', 1, 'margin-right', 1,
+			'cursor', 'pointer',
+			'user-select', 'none',
+			'-webkit-user-select', 'none'
+		)
+		RedCss('.testButton:hover').S(
+			'background', 'purple',
+			'color', '#fff'
+		)
+		RedCss('.rootBox').S('counter-reset', 'index -1')
+		RedCss('.testITEM').S('border', 0, 'outline', 'none', 'transition', 'transform 0.3s,box-shadow 0.3s')
+		RedCss('.testITEM:before').S(
+			'content', "counter(index)",
+			'counter-increment', 'index',
+			'color', '#ff7755',
+			'position', 'absolute',
+			'bottom', -65
+		)
+		RedDom('div').S(
+			'position', 'absolute',
+			'top', 0, 'right', 0,
+
+			// add
+			'>', RedDom('button').S(
+				'html', 'addChild( child )',
+				'@className', 'testButton',
+				'background', '#ff2288',
+				'down', function () {
+					rootBox.addChild(createItem())
+				}
+			),
+			'>', (function () {
+				var t0
+				t0 = RedDom('input').S('type', 'number', 'text-align', 'center', '@value', 0, 'width', 100)
+				return RedDom('div').S(
+					'@className', 'testButton',
+					'background', '#ff2288',
+					'>', RedDom('div').S(
+						'html', 'addChild( param ,child) :',
+						'display', 'inline-block',
+						'margin-right', 5,
+						'down', function () {
+							rootBox.addChildAt(t0.S('@value'), createItem())
+
+						}
+					),
+					'>', t0
+				)
+			})(),
+
+			// getChild
+			'>', (function () {
+				var t0
+				t0 = RedDom('input').S('type', 'number', 'text-align', 'center', '@value', 0, 'width', 100)
+				return RedDom('div').S(
+					'@className', 'testButton',
+					'background', '#ffcc88',
+					'>', RedDom('div').S(
+						'html', 'getChildAt :',
+						'display', 'inline-block',
+						'margin-right', 5,
+						'down', function () {
+							var t = rootBox.getChildAt(t0.S('@value'))
+							if (t) {
+								t.S('transform', 'scale(2,2)', 'box-shadow', '0px 0px 30px rgba(0,0,0,0.45)')
+								setTimeout(function () {
+									t.S('transform', 'scale(1,1)', 'box-shadow', '')
+								}, 150)
+							}
+						}
+					),
+					'>', t0
+				)
+			})(),
+			'>', RedDom('button').S(
+				'html', 'getChildAt( 0 )',
+				'@className', 'testButton',
+				'display', 'inline-block',
+				'background', '#ffcc88',
+				'down', function () {
+					var t = rootBox.getChildAt(0)
+					if (t) {
+						t.S('transform', 'scale(2,2)', 'box-shadow', '0px 0px 30px rgba(0,0,0,0.45)')
+						setTimeout(function () {
+							t.S('transform', 'scale(1,1)', 'box-shadow', '')
+						}, 150)
+					}
+				}
+			),
+			'>', RedDom('button').S(
+				'html', 'getChildAt( 999 )',
+				'@className', 'testButton',
+				'display', 'inline-block',
+				'background', '#ffcc88',
+				'down', function () {
+					var t = rootBox.getChildAt(999)
+					if (t) {
+						t.S('transform', 'scale(2,2)', 'box-shadow', '0px 0px 30px rgba(0,0,0,0.45)')
+						setTimeout(function () {
+							t.S('transform', 'scale(1,1)', 'box-shadow', '')
+						}, 150)
+					}
+				}
+			),
+			'>', RedDom('button').S(
+				'html', 'getChildAt( 1 )',
+				'@className', 'testButton',
+				'display', 'inline-block',
+				'background', '#ffcc88',
+				'down', function () {
+					var t = rootBox.getChildAt(1)
+					if (t) {
+						t.S('transform', 'scale(2,2)', 'box-shadow', '0px 0px 30px rgba(0,0,0,0.45)')
+						setTimeout(function () {
+							t.S('transform', 'scale(1,1)', 'box-shadow', '')
+						}, 150)
+					}
+				}
+			),
+			'>', RedDom('div').S(
+				'>', RedDom('button').S(
+					'html', 'getChildNum( )',
+					'@className', 'testButton',
+					'display', 'inline-block',
+					'background', '#ff2288',
+					'down', function () {
+						alert(rootBox.getChildNum())
+					}
+				)
+			),
+
+			// test end
+			'<', 'body'
+		)
+	}
+	setTestBts()
+
+
+</script>
+
+</body>
+</html>

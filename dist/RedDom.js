@@ -247,16 +247,16 @@ UUID_TABLE = {},
 	fn['addChild'] = fn['>'] = function (v) {
 		this.dom.appendChild(v instanceof RedDomCls ? v.dom : v);
 	},
-	fn['addChildAt'] = function(index,v){
+	fn['addChildAt'] = function (index, v) {
 		var refChild = this.dom.children[index];
-		if(refChild) this.dom.insertBefore(v instanceof RedDomCls ? v.dom : v, refChild);
+		if (refChild) this.dom.insertBefore(v instanceof RedDomCls ? v.dom : v, refChild);
 		else this.dom.appendChild(v instanceof RedDomCls ? v.dom : v);
 	},
-	fn['removeChild'] = function(v){
+	fn['removeChild'] = function (v) {
 		this.dom.removeChild(v instanceof RedDomCls ? v.dom : v);
 	},
-	fn['removeChildAt'] = function(index){
-		if(this.dom.children[index]){
+	fn['removeChildAt'] = function (index) {
+		if (this.dom.children[index]) {
 			this.dom.removeChild(this.dom.children[index])
 		}
 	},
@@ -273,6 +273,63 @@ UUID_TABLE = {},
 	fn['getSelfIndex'] = function () {
 		return Array.prototype.indexOf.call(this.dom.parentNode.children, this.dom)
 	};
+///////////////////////////////////////////////////////////////////////////////////
+(function () {
+	var keys, realKeys;
+	var lX, lY, realX, realY, preventKey;
+	var evtUUID, event_UUID_TABLE;
+	var i;
+	var preventKeyFunc;
+	evtUUID = 0,
+		event_UUID_TABLE = {},
+		// 디텍팅과 관련된 녀석들
+		keys = 'over,out,down,up,move,click'.split(','),
+		// 디덱팅과 관련없는 녀석들은 여기서 허용함
+		keys.push('focus', 'focusout', 'wheel', 'input', 'select', 'change', 'blur', 'keydown', 'keyup', 'press'),
+		realKeys = {},
+		i = keys.length,
+		preventKeyFunc = function (v) {
+			v[preventKey]()
+		},
+		lX = (project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a.browser == 'ie' && project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a.browserVer < 10) ? 'offsetX' : 'layerX',
+		lY = (project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a.browser == 'ie' && project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a.browserVer < 10) ? 'offsetY' : 'layerY',
+		realX = (project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a.browser == 'firefox') ? 'pageX' : 'x',
+		realY = (project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a.browser == 'firefox') ? 'pageY' : 'y',
+		preventKey = (project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a.browser == 'ie') ? 'preventDefault' : 'stopPropagation';
+	i = keys.length;
+	while (i--) {
+		(function () {
+			var eventKey = keys[i];
+			realKeys[eventKey] = project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a[eventKey] ? project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a[eventKey] : eventKey;
+			fn[eventKey] = function (v) {
+				if (v == null) {
+					if (event_UUID_TABLE[this.dom.__uuid]) {
+						this.dom.removeEventListener(realKeys[eventKey], event_UUID_TABLE[this.dom.__uuid][realKeys[eventKey]], true);
+						event_UUID_TABLE[this.dom.__uuid][realKeys[eventKey]] = null
+					}
+					//console.log(event_UUID_TABLE)
+				} else {
+					if (!event_UUID_TABLE[this.dom.__uuid]) event_UUID_TABLE[this.dom.__uuid] = {};
+					event_UUID_TABLE[this.dom.__uuid][realKeys[eventKey]] = function (e) {
+						v.call(UUID_TABLE[this.__uuid], {
+							type: eventKey, target: e.target,
+							x: e[realX], y: e[realY],
+							deltaX: e.deltaX, deltaY: e.deltaY,
+							localX: e[lX], localY: e[lY],
+							//mx:"작업전",my:"작업전",
+							prevent: preventKeyFunc,
+							nativeEvent: e,
+							uuid: evtUUID++
+						})
+					};
+					this.dom.addEventListener(realKeys[eventKey], event_UUID_TABLE[this.dom.__uuid][realKeys[eventKey]], true)
+				}
+
+			}
+		})()
+	}
+
+})();
 /* harmony default export */ __webpack_exports__["default"] = (RedDom);
 
 /***/ })
