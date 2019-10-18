@@ -131,9 +131,9 @@ UUID_TABLE = {},
 	//////////////////////////////////
 	// 실제 클래스
 	RedDomCls = function (k) {
-		(this.dom = k).__uuid = UUID++,
-			UUID_TABLE[this.dom.__uuid] = this,
-			this.dom.dataset ? 0 : this.dom.dataset = {}
+		(this.dom = k).__uuid = UUID++;
+		UUID_TABLE[this.dom.__uuid] = this;
+		this.dom.dataset ? 0 : this.dom.dataset = {}
 	},
 	//////////////////////////////////
 	// 클래스 팩토리
@@ -236,9 +236,10 @@ UUID_TABLE = {},
 	fn['value'] = function (v) {
 		return v != undefined ? this.dom.value = v : this.dom.value
 	},
-	fn['<'] = function (v) {
+	fn['parent'] = fn['<'] = function (v) {
 		v = v == 'body' ? document.body : v instanceof RedDomCls ? v.dom : v;
-		v.appendChild(this.dom)
+		if (v == undefined) return this.dom.parentNode ? RedDom(this.dom.parentNode) : this.dom.parentNode;
+		else v.appendChild(this.dom)
 	},
 	fn['remove'] = function () {
 		if (this.dom.parentNode) this.dom.parentNode.removeChild(this.dom);
@@ -273,85 +274,83 @@ UUID_TABLE = {},
 	fn['getSelfIndex'] = function () {
 		return Array.prototype.indexOf.call(this.dom.parentNode.children, this.dom)
 	};
-///////////////////////////////////////////////////////////////////////////////////
-(function () {
-	var keys, realKeys;
-	var lX, lY, realX, realY, preventKey;
-	var evtUUID, event_UUID_TABLE;
-	var i;
-	var preventKeyFunc;
-	evtUUID = 0,
-		event_UUID_TABLE = {},
-		// 디텍팅과 관련된 녀석들
-		// 디덱팅과 관련없는 녀석들은 여기서 허용함
-		// mouse event
-		keys = 'over,out,down,up,move,click,dblclick,wheel'.split(','),
-		// TODO - safari not surpport 'wheel',
-		// keyboard event
-		keys.push('keydown', 'keyup', 'keypress'),
-		// element event
-		keys.push('blur', 'change', 'contextmenu', 'focus', 'input','invalid', 'reset', 'select', 'submit', 'search'),
-		// TODO - safari not surpport 'invalid',
-		// TODO - ie, firefox not surpport 'search',
-		// drag event
-		keys.push('drag', 'dragend', 'dragenter', 'dragleave', 'dragover', 'dragstart', 'drop', 'scroll'),
-		realKeys = {},
-		i = keys.length,
-		preventKeyFunc = function (v) {
-			v[preventKey]()
-		},
-		// lX = (detector.browser == 'ie' && detector.browserVer < 10) ? 'offsetX' : 'layerX',
-		// lY = (detector.browser == 'ie' && detector.browserVer < 10) ? 'offsetY' : 'layerY',
-		// realX = (detector.browser == 'firefox') ? 'pageX' : 'x',
-		// realY = (detector.browser == 'firefox') ? 'pageY' : 'y',
-		preventKey = (project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a.browser == 'ie') ? 'preventDefault' : 'stopPropagation';
-	i = keys.length;
-	while (i--) {
-		(function () {
-			var eventKey = keys[i];
-			var tDomUUID;
-			realKeys[eventKey] = project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a[eventKey] ? project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a[eventKey] : eventKey;
-			fn[eventKey] = function (handler) {
-				tDomUUID = this.dom.__uuid;
-				if (handler === null) {
-					if (event_UUID_TABLE[tDomUUID]) {
-						this.dom.removeEventListener(realKeys[eventKey], event_UUID_TABLE[tDomUUID][realKeys[eventKey]], true);
-						event_UUID_TABLE[tDomUUID][realKeys[eventKey]] = undefined
-					}
-				}else {
-					if(handler){
-						// 기존에 등록된 이벤트는 무조건 삭제
+	///////////////////////////////////////////////////////////////////////////////////
+	(function () {
+		var keys, realKeys;
+		var lX, lY, realX, realY, preventKey;
+		var evtUUID, event_UUID_TABLE;
+		var i;
+		var preventKeyFunc;
+		evtUUID = 0,
+			event_UUID_TABLE = {},
+			// 디텍팅과 관련된 녀석들
+			// 디덱팅과 관련없는 녀석들은 여기서 허용함
+			// mouse event
+			keys = 'over,out,down,up,move,click,dblclick,wheel'.split(','),
+			// TODO - safari not surpport 'wheel',
+			// keyboard event
+			keys.push('keydown', 'keyup', 'keypress'),
+			// element event
+			keys.push('blur', 'change', 'contextmenu', 'focus', 'input', 'invalid', 'reset', 'select', 'submit', 'search'),
+			// TODO - safari not surpport 'invalid',
+			// TODO - ie, firefox not surpport 'search',
+			// drag event
+			keys.push('drag', 'dragend', 'dragenter', 'dragleave', 'dragover', 'dragstart', 'drop', 'scroll'),
+			realKeys = {},
+			i = keys.length,
+			preventKeyFunc = function (v) {
+				v[preventKey]()
+			},
+			// lX = (detector.browser == 'ie' && detector.browserVer < 10) ? 'offsetX' : 'layerX',
+			// lY = (detector.browser == 'ie' && detector.browserVer < 10) ? 'offsetY' : 'layerY',
+			// realX = (detector.browser == 'firefox') ? 'pageX' : 'x',
+			// realY = (detector.browser == 'firefox') ? 'pageY' : 'y',
+			preventKey = (project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a.browser == 'ie') ? 'preventDefault' : 'stopPropagation';
+		i = keys.length;
+		while (i--) {
+			(function () {
+				var eventKey = keys[i];
+				var tDomUUID;
+				realKeys[eventKey] = project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a[eventKey] ? project_simple_red_detector__WEBPACK_IMPORTED_MODULE_0___default.a[eventKey] : eventKey;
+				fn[eventKey] = function (handler) {
+					tDomUUID = this.dom.__uuid;
+					if (handler === null) {
 						if (event_UUID_TABLE[tDomUUID]) {
 							this.dom.removeEventListener(realKeys[eventKey], event_UUID_TABLE[tDomUUID][realKeys[eventKey]], true);
 							event_UUID_TABLE[tDomUUID][realKeys[eventKey]] = undefined
 						}
-						//console.log(event_UUID_TABLE)
-						if (!event_UUID_TABLE[tDomUUID]) event_UUID_TABLE[tDomUUID] = {};
-						event_UUID_TABLE[tDomUUID][realKeys[eventKey]] = function (e) {
-							handler.call(UUID_TABLE[this.__uuid], {
-								type: eventKey,
-								target: e.target,
-								// x: e[realX], y: e[realY],
-								// deltaX: e.deltaX, deltaY: e.deltaY,
-								// localX: e[lX], localY: e[lY],
-								prevent: preventKeyFunc,
-								nativeEvent: e,
-								uuid: evtUUID++
-							})
-						};
-						event_UUID_TABLE[tDomUUID][realKeys[eventKey]].originHandler = handler
-						this.dom.addEventListener(realKeys[eventKey], event_UUID_TABLE[tDomUUID][realKeys[eventKey]], true)
-					}else{
-						// 기존에 등록된 이벤트가 있으면 리턴
-						return event_UUID_TABLE[tDomUUID][realKeys[eventKey]]
+					} else {
+						if (handler) {
+							// 기존에 등록된 이벤트는 무조건 삭제
+							if (event_UUID_TABLE[tDomUUID]) {
+								this.dom.removeEventListener(realKeys[eventKey], event_UUID_TABLE[tDomUUID][realKeys[eventKey]], true);
+								event_UUID_TABLE[tDomUUID][realKeys[eventKey]] = undefined
+							}
+							//console.log(event_UUID_TABLE)
+							if (!event_UUID_TABLE[tDomUUID]) event_UUID_TABLE[tDomUUID] = {};
+							event_UUID_TABLE[tDomUUID][realKeys[eventKey]] = function (e) {
+								handler.call(UUID_TABLE[this.__uuid], {
+									type: eventKey,
+									target: e.target,
+									// x: e[realX], y: e[realY],
+									// deltaX: e.deltaX, deltaY: e.deltaY,
+									// localX: e[lX], localY: e[lY],
+									prevent: preventKeyFunc,
+									nativeEvent: e,
+									uuid: evtUUID++
+								})
+							};
+							event_UUID_TABLE[tDomUUID][realKeys[eventKey]].originHandler = handler;
+							this.dom.addEventListener(realKeys[eventKey], event_UUID_TABLE[tDomUUID][realKeys[eventKey]], true)
+						} else {
+							// 기존에 등록된 이벤트가 있으면 리턴
+							return event_UUID_TABLE[tDomUUID][realKeys[eventKey]]
+						}
 					}
 				}
-
-
-			}
-		})()
-	}
-})();
+			})()
+		}
+	})();
 /* harmony default export */ __webpack_exports__["default"] = (RedDom);
 
 /***/ })
